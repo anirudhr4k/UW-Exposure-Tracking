@@ -3,6 +3,6 @@ import { reportPositiveTest, getRoomByName } from "../controllers/rooms.js";
 
 const router = express.Router();
 router.post("/report-positive", reportPositiveTest);
-router.get("/get-room", getRoomByName);
+router.get("/get-room/:name", getRoomByName);
 
 export default router;

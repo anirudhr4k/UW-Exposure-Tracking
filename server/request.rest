@@ -8,7 +8,7 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:8000/api/buildings/get-buildings/Mi
+GET http://localhost:8000/api/buildings/get-buildings/a
 
 ###
 
@@ -16,5 +16,12 @@ POST http://localhost:8000/api/rooms/report-positive
 Content-Type: application/json
 
 {
-    "buildingName": "Savery Hall"
+    "buildingName": "Savery Hall",
+    "roomName": "SAV69",
+    "sectionToReport": 4
 }
+
+###
+
+
+GET http://localhost:8000/api/rooms/get-room/SAV69

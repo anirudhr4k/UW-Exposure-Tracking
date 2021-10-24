@@ -19,11 +19,12 @@ const Home: React.FC = () => {
 
   function editExposureContainer(tbldg: string, trm: string) {
     // get other data 
-    exposureContainer = (<ExploreContainer bldg={"" + tbldg} rm={"" + trm} num_cases="0" locs="" />)
+    exposureContainer = (<ExploreContainer bldg={tbldg} rm={trm} num_cases="69" locs="" />)
   }
 
 
   function showModalWithData(bldg: any, rm: any) {
+    editExposureContainer(bldg, rm)
     setShowModal(true)
   }
 

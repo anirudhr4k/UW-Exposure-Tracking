@@ -12,7 +12,7 @@ const port = 8000;
 app.use(express.json());
 app.use(
   cors({
-    origin: "http://localhost:8100/",
+    origin: "localhost:8100",
   })
 );
 

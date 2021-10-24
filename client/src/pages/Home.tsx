@@ -13,6 +13,8 @@ const Home: React.FC = () => {
 
   let exposureContainer: any;
 
+  const url = "http://localhost:8000/api/"
+
   const points = [
     { id: 1, title: "Mary Gates Hall", lat: 47.65489345919378, lng: -122.30782943077774 },
     { id: 2, title: "Paul Allen Center for CS", lat: 47.65340354952161, lng: -122.30590811728844 },
@@ -48,7 +50,7 @@ const Home: React.FC = () => {
         let default_val: any = [(<IonItem><IonLabel>Try searching for a building at UW!</IonLabel></IonItem>)]
         setSearchResults(default_val)
       } else {
-        let response: any = await axios.get(`http://localhost:8000/api/buildings/get-buildings/${name}`)
+        let response: any = await axios.get(`${url}buildings/get-buildings/${name}`)
         let data = response.data
         let lists: any = []
         if (data.length == 0) {
@@ -74,6 +76,14 @@ const Home: React.FC = () => {
   function handleRoomNum(x: any) {
     setRoomNum(x)
     getBldgs(searchText, x)
+  }
+
+  function handleAddClass() {
+    setClasses([...classes, { bldg: addBldg, rm: addRmNum }])
+    setAddBldg("")
+    setAddRmNum("")
+    setAddClassModal(false)
+
   }
 
   function editExposureContainer(tbldg: string, trm: string) {
@@ -182,7 +192,7 @@ const Home: React.FC = () => {
         </IonHeader>
         <IonContent>
           <IonItem>
-            <IonLabel position="stacked">Building</IonLabel>
+            <IonLabel position="stacked">Building Code (Not full name)</IonLabel>
             <IonInput value={addBldg} onIonChange={(e) => setAddBldg(e.detail.value!)}> </IonInput>
           </IonItem>
           <IonItem>
@@ -191,7 +201,7 @@ const Home: React.FC = () => {
           </IonItem>
         </IonContent>
         <IonFooter>
-          <IonButton expand="block" onClick={() => setAddClassModal(false)} color="success" disabled={(addBldg == "" || addRmNum == "") ? true : false}>Add</IonButton>
+          <IonButton expand="block" onClick={() => handleAddClass()} color="success" disabled={(addBldg == "" || addRmNum == "") ? true : false}>Add</IonButton>
           <br />
           <IonButton expand="block" onClick={() => setAddClassModal(false)} color="danger">Cancel</IonButton>
         </IonFooter>

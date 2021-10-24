@@ -1,0 +1,20 @@
+POST http://localhost:8000/api/buildings/add-building
+Content-Type: application/json
+
+{
+    "name": "Bagley Hall",
+    "code": "BAG",
+    "rooms": []
+}
+
+###
+GET http://localhost:8000/api/buildings/get-buildings/Mi
+
+###
+
+POST http://localhost:8000/api/rooms/report-positive
+Content-Type: application/json
+
+{
+    "buildingName": "Savery Hall"
+}

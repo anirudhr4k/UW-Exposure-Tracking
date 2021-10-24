@@ -6,9 +6,9 @@ const ExploreContainer: React.FC<{ bldg: string, rm: string, num_cases: any, loc
   let p_locs = JSON.parse(locs)
 
   function find_color(amt: number) {
-    if (amt > 10) {
+    if (amt > 1) {
       return "danger"
-    } else if (amt > 5) {
+    } else if (amt >= 1) {
       return "warning"
     } else {
       return "light"

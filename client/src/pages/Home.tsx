@@ -41,6 +41,8 @@ const Home: React.FC = () => {
 
   const [showMapModal, setShowMapModal] = useState(false);
 
+  const [exposureBldg, setExposureBldg] = useState("");
+  const [exposureRmNum, setExposureRmNum] = useState("");
   const [exposureRoomPart, setExposureRoomPart] = useState("5")
 
 
@@ -73,6 +75,31 @@ const Home: React.FC = () => {
     getBldgs(x, roomNum)
   }
 
+  async function addReport() {
+    let r1: any = await axios.get(`${url}buildings/get-buildings/${exposureBldg}`)
+    let name = r1.data[0].name
+    console.log(name)
+    try {
+      let t_dat = {
+        "buildingName": name,
+        "roomName": exposureBldg + exposureRmNum,
+        "sectionToReport": exposureRoomPart
+      }
+
+      let response: any = await axios.post(`${url}rooms/report-positive/`, t_dat)
+
+      console.log(response)
+
+    } catch (err: any) {
+      console.log(err.response)
+    }
+  }
+
+  function handleAddReport() {
+    addReport()
+    setExposureModal(false)
+  }
+
   function handleRoomNum(x: any) {
     setRoomNum(x)
     getBldgs(searchText, x)
@@ -86,12 +113,30 @@ const Home: React.FC = () => {
 
   }
 
-  function editExposureContainer(tbldg: string, trm: string) {
+  async function editExposureContainer(tbldg: string, trm: string) {
     // get other data
-    setCbldg(tbldg);
-    setCrm(trm);
-    setCnum_cases("" + Math.floor(Math.random() * 10));
-    setClocs("[0,1,1,200,6,1,2,3,100]")
+    try {
+      let r0: any = await axios.get(`${url}buildings/get-buildings/${tbldg}`)
+      let code = r0.data[0].code
+      let r1: any = await axios.get(`${url}rooms/get-room/${code + trm}`)
+      console.log("r1 dat:")
+      console.log(r1)
+      console.log(r1.data.length)
+      if (r1.data.length != 0) {
+        setCbldg(tbldg);
+        setCrm(trm);
+        setCnum_cases(r1.data.totalReports);
+        setClocs(JSON.stringify(r1.data.quantSubdivision))
+      } else {
+        setCbldg(tbldg)
+        setCrm(trm)
+        setCnum_cases("0")
+        setClocs("[0,0,0,0,0,0,0,0,0]")
+      }
+    } catch (e: any) {
+      console.log(e.response)
+    }
+
   }
 
 
@@ -138,11 +183,20 @@ const Home: React.FC = () => {
           <IonCardHeader>
             <IonCardTitle>Your classes </IonCardTitle>
             <IonButton size="small" color="success" onClick={() => setAddClassModal(true)}>Add a new class</IonButton>
-            <IonButton size="small" color="success" onClick={() => setShowMapModal(true)}>Show map of area</IonButton>
             {/*<IonButton size="small" onClick={() => setShowModal(true)}>Test Button To Open Class Modal</IonButton>*/}
           </IonCardHeader>
           <IonCardContent>
             {getClasses()}
+          </IonCardContent>
+        </IonCard>
+        <IonCard>
+          <IonCardHeader>
+            <IonCardTitle>Heatmap </IonCardTitle>
+            <IonButton size="small" color="primary" onClick={() => setShowMapModal(true)}>Show map of area</IonButton>
+            {/*<IonButton size="small" onClick={() => setShowModal(true)}>Test Button To Open Class Modal</IonButton>*/}
+          </IonCardHeader>
+          <IonCardContent>
+            <p>See a map containing the number of COVID-19 cases on a map</p>
           </IonCardContent>
         </IonCard>
       </IonContent>
@@ -238,11 +292,11 @@ const Home: React.FC = () => {
         <IonContent>
           <IonItem>
             <IonLabel position="stacked">Building Code</IonLabel>
-            <IonInput> </IonInput>
+            <IonInput value={exposureBldg} onIonChange={(e) => setExposureBldg(e.detail.value!)}> </IonInput>
           </IonItem>
           <IonItem>
             <IonLabel position="stacked">Room #</IonLabel>
-            <IonInput> </IonInput>
+            <IonInput value={exposureRmNum} onIonChange={(e) => setExposureRmNum(e.detail.value!)}> </IonInput>
           </IonItem>
           <IonItem>
             <IonLabel position="stacked">Which part of the room?</IonLabel>
@@ -260,7 +314,7 @@ const Home: React.FC = () => {
           </IonItem>
         </IonContent>
         <IonFooter>
-          <IonButton expand="block" onClick={() => setExposureModal(false)} color="success">Confirm</IonButton>
+          <IonButton expand="block" onClick={() => handleAddReport()} color="success">Confirm</IonButton>
           <br />
           <IonButton expand="block" onClick={() => setExposureModal(false)} color="danger">Cancel</IonButton>
         </IonFooter>

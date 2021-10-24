@@ -13,6 +13,7 @@ export const addBuilding = async (req, res, next) => {
 };
 
 export const searchBuildingBySubtring = async (req, res, next) => {
+  console.log(req);
   const substring = req.params.substring;
   try {
     const building = await Building.find({

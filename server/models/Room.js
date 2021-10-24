@@ -11,7 +11,6 @@ let roomSchema = new mongoose.Schema({
   },
   quantSubdivision: {
     type: Array,
-    default: [0, 0, 0, 0, 0, 0, 0, 0, 0],
     required: true,
   },
 });
